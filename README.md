@@ -1,4 +1,4 @@
-# Teamspeak No Update Ver.2.1
+# Teamspeak No Update Ver.2.2
 
 This is a batch script that stops teamspeak from asking you if you want to update every time you open it. I got tired of manually fiddling with stuff, so I wrote this.
 
@@ -28,6 +28,7 @@ Every time you open Teamspeak, the client has to go through the internet and ask
 * `Ver.1.2` - Made it slightly more visually appealing.  
 * `Ver.2.0` - Now compressed to a single file!
 * `Ver.2.1` - Hopefully made it work for the newer teamspeak update URL
+* `Ver.2.2` - Added ascii art because Kanna is cute.
 
 ### Authors
 
