@@ -8,16 +8,16 @@ Every time you open Teamspeak, the client has to go through the internet and ask
 
 ### Installation
 
-* Download a .zip of the batch file(s) [here](https://drive.google.com/open?id=1ko4r9CiL58bw84vN6898KXy-KIzgbn11).  
-* Extract the .zip anywhere you want, (I recommend your Teamspeak 3 installation folder)  
-* Right click and run the TSNU shortcut (it should be set to Run as Admin).
-* (I have also included an icon for the shortcut if you want to use that.)
+* Download a .zip of the file(s) [here](https://github.com/HerbalBeverage/Teamspeak-No-Update/archive/2.1.zip).  
+* Extract the .zip anywhere you want, (I recommend placing the "TSNU" folder in your Teamspeak 3 installation directory)  
+* Right click and run the TSNU.bat as an Administrator.
+* (I have also included an icon for a shortcut if you want to use that.)
 * You're done! No more annoying pop-ups every time you open the damn program.  
 
 ### Removal
 
 * Find where you put the files (Teamspeak 3 installation folder, maybe?)
-* Run "TSNU" (as Administrator).
+* Run "TSNU.bat" (as Administrator).
 * You're done! Now it will ask you if you want to update when you open teamspeak.
 * Optionally, if you're not going to turn it back on, delete the files.
 
