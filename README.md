@@ -8,7 +8,7 @@ Every time you open Teamspeak, the client has to go through the internet and ask
 
 ### Installation
 
-* Download a .zip of the file(s) [here](https://github.com/HerbalBeverage/Teamspeak-No-Update/archive/2.1.zip).  
+* Download a .zip of the file(s) [here](https://github.com/HerbalBeverage/Teamspeak-No-Update/archive/2.2.zip).  
 * Extract the .zip anywhere you want, (I recommend placing the "TSNU" folder in your Teamspeak 3 installation directory)  
 * Right click and run the TSNU.bat as an Administrator.
 * (I have also included an icon for a shortcut if you want to use that.)
