@@ -1,4 +1,4 @@
-# Teamspeak No Update Ver.2.2
+# Teamspeak No Update Ver.2.3
 
 This is a batch script that stops teamspeak from asking you if you want to update every time you open it. I got tired of manually fiddling with stuff, so I wrote this.
 
@@ -8,18 +8,16 @@ Every time you open Teamspeak, the client has to go through the internet and ask
 
 ### Installation
 
-* Download a .zip of the file(s) [here](https://github.com/HerbalBeverage/Teamspeak-No-Update/archive/2.2.zip).  
-* Extract the .zip anywhere you want, (I recommend placing the "TSNU" folder in your Teamspeak 3 installation directory)  
-* Right click and run the TSNU.bat as an Administrator.
-* (I have also included an icon for a shortcut if you want to use that.)
+* Download a .zip of the file(s) here.  
+* Extract the .zip anywhere you want, (I recommend placing the "TSNU" folder in your Teamspeak 3 installation directory).  
+* Run the TSNU.bat.
 * You're done! No more annoying pop-ups every time you open the damn program.  
 
 ### Removal
 
 * Find where you put the files (Teamspeak 3 installation folder, maybe?)
-* Run "TSNU.bat" (as Administrator).
+* Run "TSNU.bat".
 * You're done! Now it will ask you if you want to update when you open teamspeak.
-* Optionally, if you're not going to turn it back on, delete the files.
 
 ### Versions
 
@@ -27,10 +25,10 @@ Every time you open Teamspeak, the client has to go through the internet and ask
 * `Ver.1.1` - Added a findstr for empty lines to delete those as well.  
 * `Ver.1.2` - Made it slightly more visually appealing.  
 * `Ver.2.0` - Now compressed to a single file!
-* `Ver.2.1` - Hopefully made it work for the newer teamspeak update URL
-* `Ver.2.2` - Added ascii art because Kanna is cute.
+* `Ver.2.1` - Hopefully made it work for the newer teamspeak update URL.
+* `Ver.2.2` - Small visual updates.
+* `Ver.2.3` - Now includes a section to automatically detect and ask for administrator, instead of requiring you to manually run as Admin.
 
 ### Authors
 
-* **Herbal Beverage** - Initial work
-* **Lucia** - Reminding me I could use IF statements in .bat files
+* **Herbal Beverage** - The Big Annoyed
