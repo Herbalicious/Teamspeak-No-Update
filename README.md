@@ -7,7 +7,7 @@ Every time you open Teamspeak, it pings the update server and brings up a pop-up
 
 ### Installation
 
-* Download the file(s) from here.  
+* Download the file(s) from [here](https://github.com/Herbalicious/Teamspeak-No-Update/archive/3.0.zip).  
 * Extract and run TSNU.bat anywhere you want (I recommend placing it in your TS3 folder, or anywhere else you'll be able to easily find it).  
 * Select 1. to Install
 * You're done! No more annoying pop-ups every time you open the damn program.  
