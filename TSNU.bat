@@ -1,76 +1,119 @@
-@echo off
-color 0a
-title Teamspeak No Update
+@ECHO OFF
+COLOR 0a
+TITLE Teamspeak No Update
+NET STOP BEEP
 
-:: ------------- ::
-:: Ask for Admin ::
-:: ------------- ::
-
-:: Check for admin permissions
-    IF "%PROCESSOR_ARCHITECTURE%" EQU "amd64" (
->nul 2>&1 "%SYSTEMROOT%\SysWOW64\cacls.exe" "%SYSTEMROOT%\SysWOW64\config\system"
-) ELSE (
->nul 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system"
-)
-
-:: If error flag is set, we do not have admin
-if '%errorlevel%' NEQ '0' (
-    echo Requesting administrative privileges...
-    goto UACPrompt
-) else ( goto gotAdmin )
+:GETADMIN
+	>NUL 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system"
+	
+	IF '%errorlevel%' NEQ '0' (
+		ECHO Requesting administrative privileges...
+		GOTO UACPrompt
+	) ELSE ( GOTO gotAdmin )
 
 :UACPrompt
-    echo Set UAC = CreateObject^("Shell.Application"^) > "%temp%\getadmin.vbs"
-    set params= %*
-    echo UAC.ShellExecute "cmd.exe", "/c ""%~s0"" %params:"=""%", "", "runas", 1 >> "%temp%\getadmin.vbs"
+    ECHO Set UAC = CreateObject^("Shell.Application"^) > "%temp%\getadmin.vbs"
+    ECHO UAC.ShellExecute "%~s0", "", "", "runas", 1 >> "%temp%\getadmin.vbs"
 
     "%temp%\getadmin.vbs"
-    del "%temp%\getadmin.vbs"
-    exit /B
+    EXIT /B
 
 :gotAdmin
-    pushd "%CD%"
+    IF EXIST "%temp%\getadmin.vbs" ( DEL "%temp%\getadmin.vbs" )
+    PUSHD "%CD%"
     CD /D "%~dp0"
+
+:: --------------------------------------- ::
+
+:MENU
+	:: Searches the host file for "TSNU" and set variable 'INS' to 1 if it is installed.
+	FINDSTR /c:"TSNU" "C:\Windows\System32\drivers\etc\hosts"
+	IF ERRORLEVEL 1 GOTO INS0
+	IF ERRORLEVEL 0 GOTO INS1
+		:INS0
+			SET /A INS=0
+			GOTO CONT
+		:INS1
+			SET /A INS=1
+			GOTO CONT
+
+	:CONT
+	CLS
+	IF %INS% == 1 ECHO TSNU is installed.
+	IF %INS% == 0 ECHO TSNU is not installed.
+	ECHO.
+	ECHO What would you like to do?
+	ECHO 1. Install
+	ECHO 2. Uninstall
+	ECHO 3. Exit
+	CHOICE /C 123 /N
 	
-:: --------------------------------------------------- ::
-:: When command prompt has admin priveleges, continue: ::
-:: --------------------------------------------------- ::
+	IF ERRORLEVEL 3 GOTO END
+	IF ERRORLEVEL 2 GOTO UNINSTALLHANDLER
+	IF ERRORLEVEL 1 GOTO INSTALLHANDLER
 
-:: Check if TSNU is currently enabled. (Search the hosts file for the string "TSNU")
-echo Checking if TSNU is currently activated...
-findstr /c:"TSNU" "C:\Windows\System32\drivers\etc\hosts" >nul 2>&1 && (
+:: -------------- Handlers --------------- ::
 
-:: In the hosts file | find all lines that are not new lines | and do not contain the word teamspeak > and create a new file using those lines
-echo Deactivating TSNU...
-type C:\Windows\System32\drivers\etc\hosts | findstr /v /r /c:"^$" /c:"^\ *$" | findstr /v "teamspeak" > C:\Windows\System32\drivers\etc\tsnu-hosts
+:INSTALLHANDLER
+	IF %INS% == 1 GOTO INSTALLED
+	IF %INS% == 0 GOTO INSTALL
+	ECHO INS not set. (%INS%)
+	PAUSE
+	
+:UNINSTALLHANDLER
+	IF %INS% == 1 GOTO UNINSTALL
+	IF %INS% == 0 GOTO NOTINSTALLED
+	ECHO INS not set. (%INS%)
+	PAUSE
 
-:: Use the new file (without new lines or lines containing "teamspeak" to replace the hosts file
-xcopy C:\Windows\System32\drivers\etc\tsnu-hosts C:\Windows\System32\drivers\etc\hosts /Y
+:: --------------------------------------- ::
 
-:: Delete the now duplicate file
-del /f C:\Windows\System32\drivers\etc\tsnu-hosts
+:INSTALL
+	:: Add a blank link to the bottom of the 'hosts' file.
+	ECHO. >> C:\Windows\System32\drivers\etc\hosts
+	
+	:: Add a comment to the hosts file describing what this does.
+	ECHO #		[TSNU] This prevents teamspeak from asking if you want to update.  >> C:\Windows\System32\drivers\etc\hosts
+	
+	:: Prevent teamspeak from ever reaching the update server by rerouting it to localhost.
+	ECHO 		127.0.0.1		update.teamspeak.com  >> C:\Windows\System32\drivers\etc\hosts
+	ECHO 		127.0.0.1		versions.teamspeak.com  >> C:\Windows\System32\drivers\etc\hosts
+	
+	:: Go to the menu
+	GOTO MENU
 
-echo.
-echo TSNU has been removed from your hosts file. It will now ask to update when launched!
-timeout /t 10
+:INSTALLED
+	CLS
+	ECHO TSNU is already installed.
+	PAUSE
+	:: Go to the menu
+	GOTO MENU
 
-) || ( 
 
-:: Add a blank link to the bottom of the 'hosts' file.
-echo Adding a new line to your hosts file.
-echo. >> C:\Windows\System32\drivers\etc\hosts
+:: --------------------------------------- ::
 
-:: Add a comment to the hosts file describing what this does.
-echo Writing a comment in your hosts file.
-echo #		[TSNU] This prevents teamspeak from asking if you want to update.  >> C:\Windows\System32\drivers\etc\hosts
+:UNINSTALL
+	:: Creates a temporary file (tsnu-hosts) that contains all lines except those containing "teamspeak" and blank new lines.
+	:: /v = line does not contain, /r = enable regular expressions, /c: = string, '^$' = blank line, '^\ *$" = lines with only spaces
+	TYPE C:\Windows\System32\drivers\etc\hosts | FINDSTR /v /r /c:"^$" /c:"^\ *$" | FINDSTR /v "teamspeak" > C:\Windows\System32\drivers\etc\tsnu-hosts
+	
+	:: Saves the temporary file as the hosts file, then deletes the temporary file
+	XCOPY C:\Windows\System32\drivers\etc\tsnu-hosts C:\Windows\System32\drivers\etc\hosts /Y
+	DEL /f C:\Windows\System32\drivers\etc\tsnu-hosts
+	
+	:: Go to the menu
+	GOTO MENU
 
-:: Prevent teamspeak from ever reaching the update server by rerouting it to localhost.
-echo # >> C:\Windows\System32\drivers\etc\hosts
-echo Redirecting update.teamspeak.com and versions.teamspeak.com to 127.0.0.1
-echo 		127.0.0.1		update.teamspeak.com  >> C:\Windows\System32\drivers\etc\hosts
-echo 		127.0.0.1		versions.teamspeak.com  >> C:\Windows\System32\drivers\etc\hosts
+:NOTINSTALLED
+	CLS
+	ECHO TSNU is not installed.
+	PAUSE
+	:: Go to the menu
+	GOTO MENU
 
-echo.
-echo TSNU has been added to your hosts file. No more annoying popups!
-timeout /t 10
-)
+:: --------------------------------------- ::
+
+
+:: End the script
+	:END
+	timeout /t 10
